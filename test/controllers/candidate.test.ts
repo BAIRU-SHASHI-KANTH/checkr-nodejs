@@ -155,7 +155,6 @@ describe("candidate controller", function () {
     expect(res.jsonData.message).to.equal(RESPONSE_MESSAGES.CANDIDATE_ADDED);
   });
 
-
   it("should add adverse action successfully", async () => {
     const req = {
       body: {
@@ -180,7 +179,9 @@ describe("candidate controller", function () {
     await addAdverseAction(req as Request, res as any, () => {});
 
     expect(res.statusCode).to.equal(201);
-    expect(res.jsonData.message).to.equal(RESPONSE_MESSAGES.ADVERSE_ACTION_SENT);
+    expect(res.jsonData.message).to.equal(
+      RESPONSE_MESSAGES.ADVERSE_ACTION_SENT
+    );
   });
 
   it("should throw error for add adverse action when tried to add for non existing candidate", async () => {
@@ -192,7 +193,7 @@ describe("candidate controller", function () {
         candidateId: "647786907c2718d4c939723b",
       },
     };
-    
+
     let nextCalled = false;
     const mockNext = (error: CustomError) => {
       nextCalled = true;
@@ -204,7 +205,6 @@ describe("candidate controller", function () {
     await addAdverseAction(req as any, {} as any, mockNext as NextFunction);
     expect(nextCalled).to.equal(true);
   });
-
 
   it("should get candidate by id successfully", async () => {
     const req = {
