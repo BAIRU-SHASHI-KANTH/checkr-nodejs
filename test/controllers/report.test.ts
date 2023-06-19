@@ -40,7 +40,6 @@ describe("report controller", function () {
       },
     };
     const mockNext = (error: CustomError) => {
-      
       expect(error).to.exist;
       expect(error.statusCode).to.equal(404);
       expect(error.message).to.equal(RESPONSE_MESSAGES.CANDIDATE_NOT_FOUND);
@@ -49,22 +48,21 @@ describe("report controller", function () {
       done();
     });
   });
-  it("should throw error when tried to get report for not available candidate Id",async ()=>{
-    const req = { params:{candidateId:"647786907c2718d4c939723d"}}
+  it("should throw error when tried to get report for not available candidate Id", async () => {
+    const req = { params: { candidateId: "647786907c2718d4c939723d" } };
     let nextCalled = false;
     const mockNext = (error: CustomError) => {
-        nextCalled = true;
-        expect(error).to.exist;
-        expect(error.statusCode).to.equal(404);
-        expect(error.message).to.equal(RESPONSE_MESSAGES.REPORT_NOT_FOUND);
+      nextCalled = true;
+      expect(error).to.exist;
+      expect(error.statusCode).to.equal(404);
+      expect(error.message).to.equal(RESPONSE_MESSAGES.REPORT_NOT_FOUND);
     };
-    await getReport(req as any,{} as any,mockNext as NextFunction);
-    
-  })
+    await getReport(req as any, {} as any, mockNext as NextFunction);
+  });
 
   it("should add report successfully", async () => {
     const candidate = new Candidate({
-    _id: "647786907c2718d4c939723d",
+      _id: "647786907c2718d4c939723d",
       firstName: "shashi",
       middleName: "kanth",
       lastName: "bairu",
@@ -76,7 +74,7 @@ describe("report controller", function () {
       email: "viratkohlih@example.com",
       companyId: "6463a98d5e8cf3b5ae9c0e30",
     });
-    
+
     const newCandidate = await candidate.save();
     const req = {
       body: {
@@ -106,23 +104,23 @@ describe("report controller", function () {
     expect(res.jsonData.message).to.equal(RESPONSE_MESSAGES.REPORT_ADDED);
   });
 
-  it("should get report successfully",async ()=>{
-    const req = { params:{candidateId:"647786907c2718d4c939723d"}}
+  it("should get report successfully", async () => {
+    const req = { params: { candidateId: "647786907c2718d4c939723d" } };
     const res = {
-            statusCode: 500,
-            jsonData: { message: "" },
-            status: function (code: number) {
-              this.statusCode = code;
-              return this;
-            },
-            json: function (data: any) {
-              this.jsonData = data;
-            },
-          };
-    await getReport(req as any,res as any,()=>{});
+      statusCode: 500,
+      jsonData: { message: "" },
+      status: function (code: number) {
+        this.statusCode = code;
+        return this;
+      },
+      json: function (data: any) {
+        this.jsonData = data;
+      },
+    };
+    await getReport(req as any, res as any, () => {});
     expect(res.statusCode).to.equal(200);
     expect(res.jsonData.message).to.equal(RESPONSE_MESSAGES.REPORT_FOUND);
-  })
+  });
 
   after(async () => {
     await Report.deleteMany({});
