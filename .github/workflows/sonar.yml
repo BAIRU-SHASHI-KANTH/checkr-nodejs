@@ -15,10 +15,16 @@ jobs:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Install Dependencies
         run: npm install
+      - name: create env file
+        run: |
+          touch .env
+          echo test_dbUrl=${{ secrets.TEST_DB_URL }} >> .env
+          
       - name: Run Tests
-        run: npm run test-coverage
         env:
           test_dbUrl: ${{ secrets.TEST_DB_URL}}
+        run: npm run test-coverage
+        
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:

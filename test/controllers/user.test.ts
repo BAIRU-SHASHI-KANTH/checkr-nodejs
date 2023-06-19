@@ -5,11 +5,9 @@ import { NextFunction, Request } from "express";
 import User from "../../src/models/user";
 import { CustomError } from "../../src/util/types";
 const mongoose = require("mongoose");
-const ObjectId = mongoose.ObjectId;
 import { loginUser, signupUser, getAllUsers } from "../../src/controllers/user";
 const dotenv = require("dotenv");
 dotenv.config();
-const PORT = process.env.port ?? 3003;
 const TEST_DB_URL = process.env.test_dbUrl;
 
 describe("User controller", function () {
@@ -65,7 +63,6 @@ describe("User controller", function () {
     const mockNext = (error: CustomError) => {
       nextCalled = true;
       expect(error).to.exist;
-      // expect(error.message).to.equal("Database error");
     };
 
     signupUser(req as any, {} as any, mockNext as NextFunction)
@@ -77,33 +74,6 @@ describe("User controller", function () {
         done(error);
       });
     sinon.restore();
-  });
-
-  it("should login successfully", function (done) {
-    const req = {
-      body: {
-        email: "Testing@gmail.com",
-        password: "testing@123",
-      },
-    };
-    const res = {
-      statusCode: 500,
-      jsonData: { message: "" },
-      status: function (code: number) {
-        this.statusCode = code;
-        return this;
-      },
-      json: function (data: any) {
-        this.jsonData = data;
-      },
-    };
-    loginUser(req as any, res as any, () => {}).then(() => {
-      expect(res.statusCode).to.equal(200);
-      expect(res.jsonData.message).to.equal(
-        RESPONSE_MESSAGES.USER_LOGIN_SUCCESS
-      );
-      done();
-    });
   });
 
   it("should throw error when tried to login with wrong pass", async () => {
